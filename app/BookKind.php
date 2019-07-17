@@ -9,7 +9,9 @@ class BookKind extends Model
     //
     protected $table = 'book_kinds';
 
-    protected $fillable = ['name', 'code'];
+    protected $fillable = [
+        'name', 'kind_code', 'isActive'
+    ];
 
     public $timestamps = false;
 }

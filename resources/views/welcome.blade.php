@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Geckoso's Library</title>
+        <title>Laravel</title>
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
@@ -65,21 +65,33 @@
     </head>
     <body>
         <div class="flex-center position-ref full-height">
-            <div class="top-right links">
-                @auth
-                    <a href="{{  url('/') }}">Home</a>
-                    <a href="{{  url('/bookkind') }}">Book Kind</a>
-                    <a href="{{  url('/book') }}">Book</a>
-                    <a href="{{  url('/rental') }}">Rental</a>
-                    <a href="{{ url('/logout') }}">Logout</a><i>{{Auth::user()->email}}</i>
-                @else
-                    <a href="{{  url('/login') }}">Login</a>
-                @endauth
-            </div>
+            @if (Route::has('login'))
+                <div class="top-right links">
+                    @auth
+                        <a href="{{ url('/home') }}">Home</a>
+                    @else
+                        <a href="{{ route('login') }}">Login</a>
+
+                        @if (Route::has('register'))
+                            <a href="{{ route('register') }}">Register</a>
+                        @endif
+                    @endauth
+                </div>
+            @endif
 
             <div class="content">
                 <div class="title m-b-md">
-                    Welcome to Geckoso's Library
+                    Laravel
+                </div>
+
+                <div class="links">
+                    <a href="https://laravel.com/docs">Docs</a>
+                    <a href="https://laracasts.com">Laracasts</a>
+                    <a href="https://laravel-news.com">News</a>
+                    <a href="https://blog.laravel.com">Blog</a>
+                    <a href="https://nova.laravel.com">Nova</a>
+                    <a href="https://forge.laravel.com">Forge</a>
+                    <a href="https://github.com/laravel/laravel">GitHub</a>
                 </div>
             </div>
         </div>

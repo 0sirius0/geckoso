@@ -1,173 +1,102 @@
-<!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <title>Geckoso's Library</title>
+@extends('master')
 
-        <!-- Fonts -->
-        <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
+@section('title')
+    Rental
+@endsection
 
-        <!-- Styles -->
-        <style>
-            html, body {
-                background-color: #fff;
-                color: #636b6f;
-                font-family: 'Nunito', sans-serif;
-                font-weight: 200;
-                height: 100vh;
-                margin: 0;
-            }
+@section('content')
+    <div class="row form-group">
+        <form method="POST" action=" {{ url('/rental/add') }}" class="col-sm-12">
+            {{ csrf_field() }}
+            <div class="row form-group">
+                <div class="col-sm-6">
+                    <h5>Book Kind</h5>
+                    <select data-placeholder="Select book kind" name="kind-id" class="kind-selection col-sm-12" tabindex="5">
+                        <option value="">Select book kind</option>
+                        @foreach ($kinds as $kind)
+                        <option value="{{ $kind->id }}">{{ $kind->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
 
-            .full-height {
-                height: 100vh;
-            }
-
-            .flex-center {
-                align-items: center;
-                display: flex;
-                justify-content: center;
-            }
-
-            .position-ref {
-                position: relative;
-            }
-
-            .top-right {
-                position: absolute;
-                right: 10px;
-                top: 18px;
-            }
-
-            .content {
-                text-align: center;
-            }
-
-            .title {
-                font-size: 84px;
-            }
-
-            .links > a {
-                color: #636b6f;
-                padding: 0 25px;
-                font-size: 13px;
-                font-weight: 600;
-                letter-spacing: .1rem;
-                text-decoration: none;
-                text-transform: uppercase;
-            }
-
-            .m-b-md {
-                margin-bottom: 30px;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="flex-center position-ref full-height">
-            <div class="top-right links">
-                @auth
-                    <a href="{{  url('/') }}">Home</a>
-                    <a href="{{  url('/bookkind') }}">Book Kind</a>
-                    <a href="{{  url('/rental') }}">Rental</a>
-                    <i>{{Auth::user()->email}}</i><a href="{{ url('/logout') }}">Logout</a>
-                @else
-                    <a href="{{  url('/login') }}">Login</a>
-                @endauth
+                <div class="col-sm-6">
+                    <h5>Book</h5>
+                    <select data-placeholder="Select book" name="book-id" class="book-selection col-sm-12" tabindex="5" disabled>
+                        <option value="">Select book</option>
+                    </select>
+                </div>
             </div>
 
-            @auth
-                <div class="content">
-                    <div class="title m-b-md">
-                        Rental Management
-                    </div>
+            <div class="row form-group">
+                <div class="col-sm-6">
+                    <h5>Class</h5>
+                    <select data-placeholder="Select Class" name="class-id" class="class-selection col-sm-12" tabindex="5">
+                        <option value="">Select Class</option>
+                        @foreach ($classes as $class)
+                        <option value="{{ $class->id }}">{{ $class->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-sm-6">
+                    <h5>Student</h5>
+                    <select data-placeholder="Select Student" name="student-id" class="student-selection col-sm-12" tabindex="5" disabled>
+                        <option value="">Select Student</option>
+                    </select>
+                </div>
+            </div>
+            <hr>
+            <div class="col-sm-12 text-center">
+                <input type="submit" value="Send" class="btn btn-primary">
+                <input type="reset" value="Reset" class="btn btn-primary">
+            </div>
+        </form>
+    </div>
+    
 
-                    <div>
-                        <div style="border: 1mm">
-                            <form method="POST" action="{{ url('rental/add') }}">
-                                {{ csrf_field() }}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.kind-selection').select2();
+        $('.book-selection').select2();
+        $('.class-selection').select2();
+        $('.student-selection').select2();
 
-                                <select name="kind_id" id="kind_id" data-dependent="book_id" class="dynamic">
-                                    <option>Select Kind</option>
-                                    @foreach ($kindlst as $kind)
-                                        <option value="{{$kind->id}}">{{$kind->name}}</option>
-                                    @endforeach
-                                </select>
-
-                                <select name="book_id" id="book_id">
-                                    <option>Select Book</option>
-                                </select>
-
-                                <input type="text" name="student_name" placeholder="Student name">
-                                <input type="text" name="student_class" placeholder="Class">
-                                <input type="submit" value="Rental">
-                            </form>
-
-                            @if(count($errors) > 0)
-                                @foreach ($errors->all() as $error)
-                                    <p><b style="color: red">{{ $error }}</b></p>
-                                @endforeach
-                            @endif
-
-                            @if($message = Session::get('error'))
-                                <p><b style="color: red">{{ $message }}</b></p>
-                            @endif
-                        </div>
+        $( ".kind-selection" ).change(function() {
+            var urlbooklst = "{{url('/book/autocomplete?kind_id=')}}" + $('.kind-selection').val();
             
-                        <div>
-                            <h1>Rental List</h1>
-                            <div align="right" style="width: 100%; padding: 10px">
-                                <a href="{{  url('/history') }}" style="border-radius: 25px; border: 1px solid black; padding: 5px; color: black">History</a>
-                            </div>
-                            <table border="1px solid", cellpadding="10", width="100%">
-                                <thead>
-                                    <th>No.</th>
-                                    <th>Book Code</th>
-                                    <th>Book Name</th>
-                                    <th>Student</th>
-                                    <th>Class</th>
-                                </thead>
-                                @foreach ($data as $item)
-                                    <tbody>
-                                        <tr>
-                                            <td>{{$loop->index+1}}</td>
-                                            <td>{{$item->book_code}}</td>
-                                            <td>{{$item->book_name}}</td>
-                                            <td>{{$item->student_name}}</td>
-                                            <td>{{$item->student_class}}</td>
-                                        </tr>
-                                    </tbody>
-                                @endforeach
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            @else
-                <div class="title m-b-md">
-                    <a href="{{  url('/login') }}">Login</a>
-                </div>
-            @endauth
-        </div>
-    </body>
-</html>
+            $.get( urlbooklst, function( data ) {
+                if(data.length > 0){
+                    $( ".book-selection" ).prop("disabled", false);
+                    $( ".book-selection" ).html( "<option value=''>Select Book</option>");
+                    $.each(data, function (index, value) {
+                        $( ".book-selection" ).append( "<option value="+value.id+">"+value.name+"</option>");
+                    });
+                }else{
+                    $( ".book-selection" ).prop("disabled", true);
+                    $( ".book-selection" ).html( "<option value=''>Select Book</option>");
+                }
+            });
+        });
 
-<script>
-    $(document).ready(function(){
-        $('.dynamic').change(function(){
-            if($(this).val() != ''){
-
-                var value = $(this).val();
-                var _token = $('input[name="_token"]').val();
-                
-                $.ajax({
-                    url: "{{ route('maincontroller.fetch') }}",
-                    method: "POST",
-                    data:{value:value, _token:_token},
-                    success:function(result){
-                        $('#book_id').html(result);
-                    }
-                });
-            }
+        $( ".class-selection" ).change(function() {
+            var urlstulst = "{{url('/student/autocomplete?class_id=')}}" + $('.class-selection').val();
+            
+            $.get( urlstulst, function( data ) {
+                if(data.length > 0){
+                    $( ".student-selection" ).prop("disabled", false);
+                    $( ".student-selection" ).html( "<option value=''>Select Student</option>");
+                    $.each(data, function (index, value) {
+                        $( ".student-selection" ).append( "<option value="+value.id+">"+value.name+"</option>");
+                    });
+                }else{
+                    $( ".student-selection" ).prop("disabled", true);
+                    $( ".student-selection" ).html( "<option value=''>Select Student</option>");
+                }
+            });
         });
     });
-</script>
+</script>  
+
+@endsection
+
+
+
