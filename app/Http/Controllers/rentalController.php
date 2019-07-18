@@ -67,10 +67,20 @@ class rentalController extends Controller
         return view('history')->with(compact('rentals', 'viewall'));
     }
 
-    function getRentalDisableByStudent(Request $request){
+    function getRentalByStudentId(Request $request){
         $student_id = $request->input('student_id');
-        $rentals = Rental::where([['isRecieve', false], ['student_id', $student_id]])->paginate(15);
-        return view('history')->with(compact('retals'));
+        $rentals = Rental::where('student_id', $student_id)->orderBy('isRecieve')->paginate(15);
+        $viewall = false;
+        return view('history')->with(compact('rentals', 'viewall'));
+    }
+
+    function getRentalByStudentName(Request $request){
+        $student_name = $request->input('student_name');
+        $rentals = Rental::join('students', 'students.id', '=', 'rentals.student_id')
+                    ->where('students.name', 'LIKE', '%'.$student_name.'%')
+                    ->paginate(15);
+        $viewall = false;
+        return view('history')->with(compact('rentals', 'viewall'));
     }
 
     function updateRental(Request $request){

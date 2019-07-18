@@ -28,7 +28,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/employee/delete', 'userController@deleteUser');
     Route::post('/employee/update', 'userController@updateUser');
     Route::post('/employee/add', 'userController@addUser');
-    
+
     Route::post('/class/add', 'classController@addClass');
     Route::get('/class/list', 'classController@getAllClass');
     Route::get('/class/update', 'classController@updateClass');
@@ -55,7 +55,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/rental/history', 'rentalController@getRentalAll');
     Route::get('/rental/historydisasble', 'rentalController@getRentalDisable');
     Route::get('/rental/checkrecieve', 'rentalController@updateRental');
-    Route::get('/rental/listdisasblebystudent', 'rentalController@getRentalDisableByStudent');
+    Route::get('/rental/search', 'rentalController@getRentalByStudentName');
+    Route::get('/rental/searchbystuid', 'rentalController@getRentalByStudentId');
     Route::post('/rental/add', 'rentalController@addRental');
 });
 

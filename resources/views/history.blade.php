@@ -26,7 +26,11 @@
         <tbody>
             @foreach ($rentals as $rental)
             <tr>
-                <td>{{$rental->student->name}}</td>
+                <td>
+                    <a href=" {{url('rental/searchbystuid?student_id='.$rental->student_id) }} ">
+                    {{$rental->student->name}}
+                    </a>
+                </td>
                 <td>{{$rental->book->name}}</td>
                 <td>{{$rental->created_at}}</td>
                 <td>

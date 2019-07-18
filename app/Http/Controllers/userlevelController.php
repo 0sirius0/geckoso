@@ -27,10 +27,10 @@ class userlevelController extends Controller
     }
 
     function addLevel(Request $request){
-        $level = new UserLevel();
-        $level->name = $request->input('name_add');
-        $levelcount = UserLevel::count();
-        $level->priority = $levelcount+1;
+        $level              = new UserLevel();
+        $level->name        = $request->input('name_add');
+        $levelcount         = UserLevel::count();
+        $level->priority    = $levelcount+1;
         $level->save();
         $message = $level->name.' Add new level success !!!! ';
 
@@ -38,23 +38,23 @@ class userlevelController extends Controller
     }
 
     function updateLevel(Request $request){
-        $level = UserLevel::find($request);
-        $level->name = $request->input('name_update');
+        $level          = UserLevel::find($request);
+        $level->name    = $request->input('name_update');
 
         $level->save();
-        $message = 'Update success !!!';
+        $message        = 'Update success !!!';
         return redirect('/level/view?level_id='.$request)->with(compact('message'));
     }
 
     function movelevelup(Request $request){
         if (Auth::user()->level->priority == 1){
-            $id = (int)$request->input('id');
-            $priority = UserLevel::find($id)->priority;
+            $id             = (int)$request->input('id');
+            $priority       = UserLevel::find($id)->priority;
 
             if ($priority > 2){
                 try{
-                    $curlevel = UserLevel::where('priority', $priority)->first();
-                    $prelevel = UserLevel::where('priority', $priority-1)->first();
+                    $curlevel           = UserLevel::where('priority', $priority)->first();
+                    $prelevel           = UserLevel::where('priority', $priority-1)->first();
                     
                     $tmp                = $prelevel->priority;
                     $prelevel->priority = $curlevel->priority;
@@ -63,9 +63,9 @@ class userlevelController extends Controller
                     $curlevel->priority = $tmp;
                     $curlevel->save();
 
-                    $message = 'Update success !!!';
+                    $message            = 'Update success !!!';
                 }catch(Exception $e){
-                    $message = $e;
+                    $message            = $e;
                 }
             }
             else{
@@ -81,25 +81,25 @@ class userlevelController extends Controller
 
     function moveleveldown(Request $request){
         if (Auth::user()->level->priority == 1){
-            $id = (int)$request->input('id');
-            $priority = UserLevel::find($id)->priority;
-            $len = count(UserLevel::all());
+            $id             = (int)$request->input('id');
+            $priority       = UserLevel::find($id)->priority;
+            $len            = count(UserLevel::all());
             
             if ($priority > 1 && $priority < $len){
                 try{
-                    $curlevel = UserLevel::where('priority', $priority)->first();
-                    $nxtlevel = UserLevel::where('priority', $priority+1)->first();
+                    $curlevel           = UserLevel::where('priority', $priority)->first();
+                    $nxtlevel           = UserLevel::where('priority', $priority+1)->first();
                     
-                    $tmp= $nxtlevel->priority;
+                    $tmp                = $nxtlevel->priority;
                     $nxtlevel->priority = $curlevel->priority;
                     $nxtlevel->save();
 
                     $curlevel->priority = $tmp;
                     $curlevel->save();
 
-                    $message = 'Update success !!!';
+                    $message            = 'Update success !!!';
                 }catch(Exception $e){
-                    $message = $e;
+                    $message            = $e;
                 }
             }else{
                 $message = 'This level is the LAST';

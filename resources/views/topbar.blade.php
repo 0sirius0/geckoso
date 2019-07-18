@@ -10,7 +10,7 @@
     method="GET" action="search" id="searchform">
         <div class="input-group">
             <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                aria-label="Search" aria-describedby="basic-addon2">
+                aria-label="Search" aria-describedby="basic-addon2" name="student_name">
             <div class="input-group-append">
                 <button class="btn btn-primary" type="submit" form="searchform">
                 <i class="fas fa-search fa-sm"></i>
